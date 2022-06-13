@@ -1,0 +1,143 @@
+{% extends "index.html" %}
+
+{% block content %}
+    <!-- breadcrumbs-area-strat -->
+	<div class="breadcrumbs-area mb-80">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="breadcrumbs-menu">
+						<ul>
+							<li><a href="{{url_for('home')}}">Home<i class="fa fa-angle-right"></i></a></li>
+							<li><a href="#" class="active">Rewards</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <!-- breadcrumbs-area-end -->
+
+    <div class="flashes">
+        {% for category, messages in get_flashed_messages(with_categories=true) %}
+            <div class="alert alert-{{ category }}" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                {{ messages|safe }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div style="margin: 15px;">
+        <h2>Rewards:</h2>
+        <div style="margin: 20px;">
+            <p>50 points*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;&nbsp;FREE $5 Gift</p>
+            <p>250 points*&nbsp;&nbsp;&nbsp;→&nbsp;&nbsp;FREE $50 Gift</p>
+            <p>1000 points*&nbsp;→&nbsp;&nbsp;FREE $500 Gift</p>
+        </div>
+        <br>
+        <p>* Based on your reward points.</p>
+        <p>-- You get 5 reward points for every item you purchase.</p>
+        {% if user.reward_points is defined %}
+            <br>
+            <label>Your Reward Points:</label>
+            <input type="number" value="{{user.reward_points}}" readonly>
+            {% if user.reward_points >= 50 %}
+                <form action="#" onsubmit="return generateGiftCard(this);" method="POST">
+                    <br>
+                    <label for="redeem">Would you like to Redeem your reward points?</label>
+                    <select id="amount" name="amount">
+                        {% if user.reward_points >= 1000 %}
+                            <option value=1000>Redeem 1000 reward points</option>
+                        {% endif %}
+                        {% if user.reward_points >= 250 %}
+                            <option value=250>Redeem 250 reward points</option>
+                        {% endif %}
+                        <option value=50>Redeem 50 reward points</option>
+                    </select>
+                    <input type="submit" value="Redeem points">
+                </form>
+            {% endif %}
+		{% else %}
+            <br>
+            <h4><strong>You are not logged in</strong></h4>
+		{% endif %}
+    </div>
+
+    <div class="modal fade" id="rewardModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="exampleModalLabel">Your Gift Card Has Been Made!</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <center style="font-size: 18px">
+                        Gift Card's Code:&nbsp;&nbsp;<span id="giftcode"></span>
+                    </center>
+                    <br>
+                    <center style="font-size: 16px">
+                        <em>Amount on Gift Card:&nbsp;&nbsp;&nbsp;$<span id="giftamount"></span></em>
+                    </center>
+                    <br>
+                    <center style="font-size: 16px">
+                        <em>Reward Points Left:&nbsp;<span id="pointsleft"></span></em>
+                    </center>
+                </div>
+                <div class="modal-footer">
+                    <center><button type="button" class="btn btn-primary" data-dismiss="modal">Close</button></center>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            $("#rewardModal").on("hidden.bs.modal", function() {
+                console.log("hello there")
+                window.location.reload();
+            });
+        });
+
+        function generateGiftCard(theForm) {
+            event.preventDefault();
+            let redeem = {
+                points: theForm.amount.value,
+                // bill_card_number: theForm.cardNum.value,
+                // bill_cvc: theForm.cvc.value
+            };
+
+            if(redeem.points == 50) {
+                redeem.balance = 5;
+            }
+            else if(redeem.points == 50) {
+                redeem.balance = 50;
+            }
+            else if(redeem.points == 1000) {
+                redeem.balance = 500;
+            }
+
+            console.log(JSON.stringify(redeem));
+
+            $.ajax({
+                type:"POST",
+                url:"{{url_for('rewards')}}",
+                contentType: "application/json",
+                data: JSON.stringify(redeem),
+                dataType: 'json',
+            }).done(function(data) {
+                if(data.success) {
+                    $("#rewardModal").modal("show");
+                    $("#giftcode").text(data.giftcode); //Get Gift Card's Code (ID)
+                    $("#giftamount").text(data.balance);
+                    $("#pointsleft").text(0); //data.points_after
+                } else {
+                    window.location.reload();
+                }
+            });
+        }
+
+    </script>
+
+{% endblock %}

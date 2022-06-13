@@ -1,0 +1,121 @@
+{% extends "index.html" %}
+
+{% block content %}
+    <div class="breadcrumbs-area mb-80">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="breadcrumbs-menu">
+						<ul>
+							<li><a href="{{url_for('home')}}">Home<i class="fa fa-angle-right"></i></a></li>
+							<li><a href="#" class="active">User Activity</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+    <div>
+		<form action="#" onsubmit="return requestReport(this);" method="POST" style="margin: 70px 50px 75px;">
+			<label for="since">Report on all Customers since this date:</label><br>
+			<input type="date" id="since" name="since" required>
+			<br><br>
+
+			<button type="submit">Get Report</button>
+		</form>
+	</div>
+
+	<!-- report -->
+	<div id="report" class="cart-main-area pb-80">
+        <div class="container">
+            <div id="amount">
+                <h2><span></span> Results</h2>
+        	</div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="table-content table-responsive">
+                        <table id="reportTable" style="width:100%">
+                            <tr>
+                                <th>Joined On</th>
+                                <th>Username</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Address</th>
+                                <th>Last Active</th>
+                                <th>Orders Made</th>
+                                <th>Products Bought</th>
+                                <th>Total Spent</th>
+                            </tr>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+	<script>
+
+	    window.addEventListener('DOMContentLoaded', (event) => {
+	        $("#report").hide();
+	        $("#amount").hide();
+	    });
+
+        function requestReport(theForm) {
+            event.preventDefault();
+            let request = {
+                from_date: theForm.since.value
+            };
+
+            console.log(JSON.stringify(request));
+
+            $.ajax({
+                type:"POST",
+                url:"{{url_for('useractivity')}}",
+                contentType: "application/json",
+                data: JSON.stringify(request),
+                dataType: 'json',
+            }).done(function(data) {
+                // console.log('data successfully sent & returned');
+                // console.log(JSON.stringify(data));
+
+                $("#amount").hide();
+                $("#amount span").text(data.amount);
+                $("#amount").show();
+
+                // clear/hide table
+                $("#report").hide();
+                $(".customer-info").remove();
+                // $("th span").text(`${request.from_date}`);
+                if(data.amount <= 0) {
+                    $("#reportTable").append(`<tr class="customer-info">
+                            <td colspan="10">No Results</td>
+                            </tr>`);
+                } else {
+                    for(let i=0; i < data.amount; i++) {
+                        let c = data.customers[i];
+                        $("#reportTable").append(`<tr class="customer-info">
+                            <td class="joined_on">${c.joined_on}</td>
+                            <td class="username">${c.username}</td>
+                            <td class="name">${c.name }</td>
+                            <td class="email">${c.email}</td>
+                            <td class="phone">${c.phone}</td>
+                            <td class="address">${c.address}</td>
+                            <td class="last_active">${c.last_active}</td>
+                            <td class="num_orders">${c.num_orders}</td>
+                            <td class="num_products">${c.num_products}</td>
+                            <td class="total_spent">$${parseFloat(c.total_spent).toFixed(2)}</td>
+                            </tr>`);
+                    }
+                }
+
+                // show table
+                $("#report").show();
+            });
+        }
+
+    </script>
+
+{% endblock %}

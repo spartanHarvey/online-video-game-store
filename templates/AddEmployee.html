@@ -1,0 +1,157 @@
+{%extends "index.html"%}
+
+{% block content%}
+<div>
+    <body class="shop">
+
+
+
+        <!-- header-area-start -->
+         <div class="flashes">
+
+
+                            {% for category, messages in get_flashed_messages(with_categories=true) %}
+
+                                <div class="alert alert-{{ category }}" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    {{ messages|safe }}
+                                </div>
+                            {% endfor %}
+                    </div>
+		<div class="checkout-area pb-80">
+			<div class="container">
+				<div class="row">
+					<form action="#" method="POST">
+						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+							<div class="checkbox-form">
+								<h3>ADD Employee</h3>
+								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
+									<div class="checkout-form-list">
+										<label>First Name<span class="required">*</span></label>
+										<input name="fname" type="text" placeholder="" required>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+									<div class="checkout-form-list">
+										<label>Last Name<span class="required">*</span></label>
+										<input name="lname" type="text" placeholder="" required>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
+									<div class="checkout-form-list">
+										<label>Job title<span> </span></label>
+										<input name="title" type="text" placeholder="title" maxlength="11" required>
+									</div>
+								</div>
+
+								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
+									<div class="checkout-form-list">
+										<label>Starts on<span class="required">*</span></label>
+										<input name="date" type="number" placeholder="MM/DD/YYYY" maxlength="10">
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
+									<div class="checkout-form-list">
+										<label>Employee username<span class="required">*</span></label>
+										<input name="username" type="text" placeholder="" required>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
+									<div class="checkout-form-list">
+										<label>Password<span class="required">*</span></label>
+										<input name="password" type="password" placeholder="" required>
+									</div>
+								</div>
+
+
+									<div class="col-lg-12">
+										<div class="checkout-form-list">
+											<label>Email<span class="required">*</span></label>
+											<input name="email" type="email"  placeholder="abc123@mail.com" required>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
+									<div class="checkout-form-list">
+										<label>Phone number<span class="required">*</span></label>
+										<input name="phone" type="number" placeholder="(123)-456-7890" maxlength="14">
+									</div>
+								</div>
+									<div class="col-lg-12">
+										<div class="checkout-form-list">
+											<label>Address <span class="required">*</span></label>
+											<input name="address"type="text" placeholder="Street address" required>
+										</div>
+									</div>
+									<div class="col-lg-12">
+										<div class="checkout-form-list">
+											<input name="address2" type="text" placeholder="Apartment, suite, unit etc. (optional)">
+										</div>
+									</div>
+									<div class="col-lg-12">
+										<div class="checkout-form-list">
+											<label>City<span class="required">*</span></label>
+											<input name="city" type="text" placeholder="Town / City" required>
+										</div>
+									</div>
+									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+										<div class="checkout-form-list">
+											<label>State / County <span class="required">*</span></label>
+											<input name="state" type="text" placeholder="" maxlength="2"  required>
+										</div>
+									</div>
+									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+										<div class="checkout-form-list">
+											<label> Zipcode <span class="required">*</span></label>
+											<input name="zipcode" type="int" placeholder="Zip" maxlength="5" required>
+											<button type="submit" onclick="validate">Submit</button>
+										</div>
+									</div>
+
+
+
+
+
+
+
+						</div>
+					</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+
+
+
+
+    </body>
+
+
+</div>
+{%endblock%}
+<script>
+ function validate() {
+    var email = document.getElementById("email").value;
+    var username = document.getElementByName("username").value;
+    var password = document.getElementByName("password").value;
+    var phone = document.getElementByName("phone").value;
+    var address = document.getElementByName("address").value;
+    var address2 = document.getElementByName("address2").value;
+    var city = document.getElementByName("city").value;
+    var state = document.getElementByName("state").value;
+    var zicode = document.getElementByName("zipcode").value;
+    var fname = document.getElementByName("fname").value;
+    var lanme = document.getElementByName("lanme").value;
+    var title = document.getElementByName("title").value;
+    if (username === null || username === "") {
+      alert("Please enter the username.");
+      return false;
+    }
+    if (password === null || password === "" ) {
+      alert("Please enter the password.");
+      return false;
+    }
+    alert('Login successful');
+  }
+</script>

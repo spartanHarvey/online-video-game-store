@@ -1,0 +1,210 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+<div class="search">
+    <!-- breadcrumbs-area-strat -->
+    <div class="breadcrumbs-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumbs-menu">
+                        <ul>
+                            <li><a href="{{url_for('home')}}">Home<i class="fa fa-angle-right"></i></a></li>
+                            <li><a href="#" class="active">Search</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- breadcrumbs-area-end -->
+        <!-- entry-header-area-start -->
+    <div class="entry-header-area pt-80">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="entry-header-title">
+                        <h2>Search</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- entry-header-area-end -->
+    <div class="cart-main-area pb-80">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <form action="#">
+                        <div class="table-content table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th class="product-thumbnail">Image</th>
+                                        <th class="product-name">Product</th>
+                                        <th class="product-price">Price</th>
+                                        <th class="product-quantity">Quantity</th>
+                                        <th class="product-subtotal">Total</th>
+                                        <th class="product-remove">Add to Cart</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if searcheditems|length < 1 %}
+                                    <tr> <!-- Default row if no search results -->
+                                        <td colspan="6">No Search Results</td>
+                                    </tr>
+                                    {% else %}
+                                    {% for item in searcheditems %}
+                                    <form action="/product/{{item.product_id}}">
+                                    <tr class="item-row" id="{{item.product_id}}">
+                                        <td class="product-thumbnail"><a href="{{ url_for('static', filename='img/product/07.jpg') }}"><img src="{{ url_for('static', filename='img/product/06.png') }}" alt="product image" /></a></td>
+                                        <td name="pn" class="product-name"><a class="a" href="/product/{{item.product_id}}">{{ item.product_name }}</a></td>
+                                        <td name="pp" class="product-price"><span class="amount">${{ item.unit_price }}</span></td>
+                                        <td name="pq" class="product-quantity"><input type="number" name="quantity" id="quantity" value="0" min="1" pattern="\d+" onchange="calcSubtotal(this.value, {{item.product_id}})"></td>
+                                        <td name="ps" class="product-subtotal"><span class="amount">$0.00</span></td>
+                                        <td name="pr" class="product-remove"><input  value="Add quantity" disabled="true" type="checkbox" name="add" id="add"></td>
+                                    </tr>
+                                    </form>
+                                    {% endfor %}
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                </div>
+                <div class="row">
+                    <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
+                        <div class="buttons-cart mb-30">
+                            {% if user.is_authenticated %}
+                            <ul>
+                                <li><a href="{{url_for('cart')}}">See Cart</a></li>
+                                <li id="add-cart"><a onclick="myFunction();" href="#">Add Selected Items to Cart</a></li> <!-- uncomment the onclick function onclick="myFunction(this)"-->
+                            </ul>
+                            {% else %}
+                            <ul>
+                                <li><a href="{{url_for('login')}}">See Cart</a></li>
+                                <li id="add-cart"><a href="{{url_for('login')}}">Add Selected Items to Cart</a></li> <!-- uncomment the onclick function onclick="myFunction(this)"-->
+                            </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12"> <!-- hidden if no items in cart -->
+                        <div class="cart_totals">
+                            <h2>Total</h2>
+                            <br>
+                            <table>
+                                <tbody>
+                                    <tr class="order-total">
+                                        <td id="total">
+                                            <strong><span class="amount">$0.00</span></strong>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    let items = [];
+    function calcSubtotal(quantity, productID) {
+        if(quantity == parseFloat(quantity).toFixed(0)) {
+            let unitPrice = document.getElementById(`${productID}`).querySelector('.product-price');
+            let subtotal = document.getElementById(`${productID}`).querySelector('.product-subtotal');
+            if(quantity > 0) {
+                subtotal.innerText = `$${parseFloat(Math.ceil((quantity * parseFloat(unitPrice.innerText.substring(1)).toFixed(2)) * 100)/100).toFixed(2)}`;
+                enable(productID);
+            }
+            else {
+                subtotal.innerText = '$0.00';
+                disable(productID)
+            }
+            calcTotal();
+        }
+        else {
+            disable(productID);
+        }
+    }
+
+    function calcTotal() {
+        let t = 0;
+        let total = document.querySelector('#total span');
+        let unitPrices = document.querySelectorAll('.item-row .product-price');
+        let quantities = document.querySelectorAll('.item-row .product-quantity input');
+        let added = document.querySelectorAll('.item-row input[type="checkbox"]');
+        for(let i=0; i < unitPrices.length; i++) {
+            if(added[i].checked) {
+                t += Math.ceil((quantities[i].value * parseFloat(unitPrices[i].innerText.substring(1)).toFixed(2)) * 100)/100;
+            }
+        }
+        total.innerText = `$${parseFloat(Math.ceil(parseFloat(t).toFixed(2) * 100)/100).toFixed(2)}`;
+    }
+
+    function disable(id) {
+        document.getElementById(`${id}`).querySelector('.product-remove input[type="checkbox"]').setAttribute('disabled', 'true');
+        document.getElementById(`${id}`).querySelector('.product-remove input[type="checkbox"]').checked = false;
+        document.getElementById(`${id}`).querySelector('.product-quantity input').value = 0;
+    }
+
+    function enable(id) {
+        document.getElementById(`${id}`).querySelector('.product-remove input[type="checkbox"]').removeAttribute('disabled');
+        document.getElementById(`${id}`).querySelector('.product-remove input[type="checkbox"]').checked = true;
+    }
+
+    function myFunction() {
+        var elem = document.querySelectorAll('.item-row');
+        var checkbox = document.querySelectorAll('.item-row input[type="checkbox"]');
+        var namet =  document.querySelectorAll('.item-row .product-name');
+        var id = document.querySelectorAll('.item-row');
+        var pricet = document.querySelectorAll('.item-row .product-price');
+        let quantityt = document.querySelectorAll('.item-row .product-quantity input[type="number"]');
+        var subt = document.querySelectorAll('.item-row .product-subtotal');
+        let total = document.querySelector('#total span').innerHTML;
+
+        let cartItems = JSON.parse(localStorage.getItem('items'));
+
+        for(let i=0; i < checkbox.length;i++) {
+            if(checkbox[i].checked == true ) {  //the box is checked and the element is not in the list we will add
+                let item = {
+                    product: namet[i].innerText,
+                    price: pricet[i].innerText,
+                    quantity: parseInt(quantityt[i].value),
+                    id: id[i].id,
+                    total: total
+                };
+                if(!cartItems) {
+					cartItems = [];
+                    cartItems.push(item);
+					console.log("Added 1st item");
+                } else {
+                    let newElement = true;
+                    cartItems.map(data => {
+                        if(data.product == item.product) {
+                            data.quantity = parseInt(data.quantity) + parseInt(item.quantity);
+                            data.total = item.total;
+
+                            newElement = false;
+                        }
+                    });
+                    if (newElement == true) {
+                        cartItems.push(item);
+						console.log("Added new item");
+                    }
+                }
+            }
+        }
+
+        localStorage.clear();
+        localStorage.setItem("items",JSON.stringify(cartItems));
+		console.log("cartItems: "+JSON.stringify(cartItems));
+    }
+
+</script>
+
+{% endblock %}

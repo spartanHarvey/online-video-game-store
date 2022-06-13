@@ -1,0 +1,98 @@
+{%extends "index.html"%}
+
+{% block content%}
+
+<div>
+
+
+    <body>
+     <div class="search">
+    <!-- breadcrumbs-area-strat -->
+    <div class="breadcrumbs-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumbs-menu">
+                        <ul>
+                            <li><a href="{{url_for('admin')}}">Home<i class="fa fa-angle-right"></i></a></li>
+                            <li><a href="#" class="active">All Customers</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- breadcrumbs-area-end -->
+        <!-- entry-header-area-start -->
+    <div class="entry-header-area pt-80">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="entry-header-title">
+                        <h2>Customers</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- entry-header-area-end -->
+    <div class="cart-main-area pb-80">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <form action="#">
+                        <div class="table-content table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th class="product-thumbnail">ID</th>
+                                        <th class="product-name">Username</th>
+                                        <th class="product-price">First Name</th>
+                                        <th class="product-quantity">Last Name</th>
+                                        <th class="product-subtotal">Email</th>
+                                        <th class="product-remove">Phone</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if all_customer|length < 1 %}
+                                    <tr> <!-- Default row if no search results -->
+                                        <td colspan="6">Customer table is empty</td>
+                                    </tr>
+                                    {% else %}
+                                    {% for item in all_customer %}
+                                    <form >
+                                    <tr class=item-row id="{{item.customer_id}}">
+                                        <!--<td class="product-thumbnail"><a href="/product/{{ item.product_id }}"><img src={{item.image_source}} alt="product image" /></a></td>-->
+                                        <td name="id" class="product-name">{{ item.customer_id }}</td>
+                                        <td name="username" class="product-price">{{ item.username }}</td>
+                                        <td name="fname" class="product-price">{{ item.fname }}</td>
+                                        <td name="lname" class="product-quantity">{{item.lname}}</td>
+                                        <td name="email" class="product-subtotal">{{item.email}}</td>
+                                        <td name="phone" class="product-remove">{{item.phone}}</td
+
+                                    </tr>
+                                    </form>
+                                    {% endfor %}
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    </body>
+
+  </div>
+{%endblock%}
+<script>
+    function removeAlert(){
+        classList.remove("alert alert-{{ category }}");
+    }
+</script>

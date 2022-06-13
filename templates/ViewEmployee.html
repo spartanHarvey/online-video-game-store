@@ -1,0 +1,184 @@
+{%extends "index.html"%}
+
+{% block content%}
+
+    <body class="shop">
+
+
+
+        <!-- header-area-start -->
+
+		<div class="ViewEmployee">
+            <!-- breadcrumbs-area-strat -->
+            <div class="breadcrumbs-area">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="breadcrumbs-menu">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flashes">
+
+
+                            {% for category, messages in get_flashed_messages(with_categories=true) %}
+
+                                <div class="alert alert-{{ category }}" role="alert">
+                                    <button type="button" onclick="hideNotification()" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    {{ messages|safe }}
+                                </div>
+                            {% endfor %}
+            </div>
+            <!-- breadcrumbs-area-end -->
+                <!-- entry-header-area-start -->
+            <div class="entry-header-area pt-80">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="entry-header-title">
+                                <h2> Employees</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- entry-header-area-end -->
+            <div class="cart-main-area pb-80">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <form action="#" method="POST" id="myform">
+                                <div class="table-content table-responsive">
+                                    <table style="width:100%">
+                                        <tr>
+
+                                          <th>ID</th>
+                                          <th>Username</th>
+                                          <th>Job title</th>
+                                          <th>First Name</th>
+                                          <th>Last Name</th>
+                                          <th>Email</th>
+                                          <th>Phone Number</th>
+                                          <th>Address1</th>
+                                          <th>Address2</th>
+                                          <th>City</th>
+                                          <th>State</th>
+                                          <th>Zipcode</th>
+                                          <th>Edit/Delete</th>
+
+
+                                        </tr>
+                                        {% if all_employees|length < 1 %}
+                                    <tr> <!-- Default row if no search results -->
+                                        <td colspan="12">Employee table is empty</td>
+                                    </tr>
+                                    {% else %}
+                                    {% for item in all_employees %}
+
+                                    <tr class=item-row id="row{{item.employee_id}}">
+
+                                        <td name="id" class="product-name">{{ item.employee_id }}</td>
+                                        <td name="username" class="username{{item.employee_id}}">{{ item.username }}</td>
+                                        <td name="job_title" class="product-price">{{ item.job_title }}</td>
+                                        <td name="fname" class="product-price">{{ item.fname }}</td>
+                                        <td name="lname" class="product-quantity">{{item.lname}}</td>
+                                        <td name="email" class="product-subtotal">{{item.email}}</td>
+                                        <td name="phone" class="product-remove">{{item.phone}}</td>
+                                        <td name="address1" class="product-remove">{{item.address}}</td>
+                                        <td name="address2" class="product-remove">{{item.addressline}}</td>
+                                        <td name="city" class="product-remove">{{item.city}}</td>
+                                        <td name="state" class="product-remove">{{item.state}}</td>
+                                        <td name="zipcode" class="product-remove">{{item.zipcode}}</td>
+
+                                        <td name="edit" class="product-remove">
+                                            <!--<a href="#" onclick="Delete(this);">Edit</a>-->
+                                            <input type="button" id="{{item.employee_id}}" value="Edit" class="edit" onclick="edit(this)">
+                                            <input type="button" id="delete{{item.employee_id}}" value="Delete" class="delete" onclick="delete_row(this)">
+                                        </td>
+
+                                    </tr>
+
+                                    {% endfor %}
+                                    {% endif %}
+
+                                      </table>
+
+                                </div>
+                            </form>
+                        </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!-- breadcrumbs-area-end -->
+		<!-- shop-main-area-start -->
+
+		<!-- shop-main-area-end -->
+		<!-- newsletter-area-start -->
+
+		<!-- newsletter-area-end -->
+		<!-- banner-area-2-start -->
+
+		<!-- banner-area-2-end -->
+		<!-- footer-area-start -->
+
+
+
+
+    </body>
+<script>
+    function hideNotification() {
+
+
+  var x = document.getElementsByClassName("flashes")[0];
+
+    x.style.display = "none";
+
+}
+//function remove(btn){
+
+
+ //let parent = btn.parentElement.parentElement
+
+
+
+
+
+    function edit(no){
+
+
+    let parent = no.parentElement.parentElement
+    children = parent.children
+let id =children[0].innerText
+let username=children[1].innerText
+let job_title=children[2].innerText
+let fname=children[3].innerText
+let lname=children[4].innerText
+let email=children[5].innerText
+let phone=children[6].innerText
+let address1=children[7].innerText
+let address2=children[8].innerText
+let city=children[9].innerText
+let state=children[10].innerText
+let zipcode=children[11].innerText
+
+   // row = document.querySelector(parent);
+   let new_row ='<tr><td><input  name="id" value="'+id+'"> </td><td ><input type="text" name="username" value="'+username+'  "required></td><td ><input type="text" name="title" value="'+job_title+'  "required></td><td ><input type="text" name="fname" value="'+fname+'"  required></td><td ><input type="text" name="lname" value="'+lname+'  "required></td><td><input type="text" name="email" value="'+email+'  "required></td><td><input type="tel" name="phone" value="'+phone+'"  required></td><td><input type="text" name="address1" value="'+address1+'"required></td><td><input type="text" name="address2" value="'+address2+'  "></td><td><input type="text" name="city" value="'+city+'  "required></td><td><input type="text" name="state" value="'+state+' "required></td><td><input type="text" name="zipcode" value="'+zipcode+'  "required></td><td><button name="edit" type="submit" form="myform" value="Submit">Submit</button></br></br><button id="cancel" type="submit" onclick="event.preventDefault() ;" value="Cancel" ;>Cancel</button></td></tr>'
+alert(address2)
+parent.innerHTML = new_row;
+   // console.log()
+
+
+}
+
+
+</script>
+
+</html>
+{%endblock%}

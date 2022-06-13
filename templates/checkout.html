@@ -1,0 +1,363 @@
+{%extends "index.html"%}
+
+{% block content%}
+
+    <div class="breadcrumbs-area mb-80">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="breadcrumbs-menu">
+						<ul>
+							<li><a href="{{url_for('home')}}">Home<i class="fa fa-angle-right"></i></a></li>
+							<li><a href="#" class="active">Checkout</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+   	<div class="slider-area" style="margin-top: 60px">
+        <div class="container">
+            <div class="flashes">
+                {% for category, messages in get_flashed_messages(with_categories=true) %}
+                    <div class="alert alert-{{ category }}" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        {{ messages|safe }}
+                    </div>
+                {% endfor %}
+    </div>
+
+	<div class="checkout-area pb-80">
+	    <style>
+	        .productname{
+	            display: flex;
+                 white-space: nowrap;
+                 /*overflow-x: hidden;*/
+	        }
+            .myitems{
+                width:100%;
+                border:transparent;
+                background: transparent;
+                border:none;
+                outline:none;
+                text-align:end;
+                /*display: flex;*/
+            }
+        </style>
+
+		<div class="container">
+			<div class="row">
+				<form id="form1" method="post"  >
+					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+						<div class="checkbox-form">
+							<h3>Billing Details</h3>
+							<div class="row">
+
+								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
+									<div class="checkout-form-list">
+										<label>First Name <span class="required">*</span></label>
+										<input type="text" name="firstName" placeholder="" required>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+									<div class="checkout-form-list">
+										<label>Last Name <span class="required">*</span></label>
+										<input type="text" name="lastName" placeholder="" required>
+									</div>
+								</div>
+
+								<div class="col-lg-12">
+									<div class="checkout-form-list">
+										<label>Address <span class="required">*</span></label>
+										<input type="text" name="address" placeholder="Street address" required>
+									</div>
+								</div>
+								<div class="col-lg-12">
+									<div class="checkout-form-list">
+										<label>Address (Line 2)</label>
+										<input type="text" name="address2" placeholder="Apartment, suite, unit etc. (optional)">
+									</div>
+								</div>
+								<div class="col-lg-12">
+									<div class="checkout-form-list">
+										<label>City <span class="required">*</span></label>
+										<input type="text" name="city" placeholder="City" required>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+									<div class="country-select">
+										<label>State<span class="required">*</span></label>
+										<select name="state" required>
+											<option value="AL">AL</option>
+											<option value="AK">AK</option>
+											<option value="AR">AR</option>
+											<option value="AZ">AZ</option>
+											<option value="CA">CA</option>
+											<option value="CO">CO</option>
+											<option value="CT">CT</option>
+											<option value="DC">DC</option>
+											<option value="DE">DE</option>
+											<option value="FL">FL</option>
+											<option value="GA">GA</option>
+											<option value="HI">HI</option>
+											<option value="IA">IA</option>
+											<option value="ID">ID</option>
+											<option value="IL">IL</option>
+											<option value="IN">IN</option>
+											<option value="KS">KS</option>
+											<option value="KY">KY</option>
+											<option value="LA">LA</option>
+											<option value="MA">MA</option>
+											<option value="MD">MD</option>
+											<option value="ME">ME</option>
+											<option value="MI">MI</option>
+											<option value="MN">MN</option>
+											<option value="MO">MO</option>
+											<option value="MS">MS</option>
+											<option value="MT">MT</option>
+											<option value="NC">NC</option>
+											<option value="NE">NE</option>
+											<option value="NH">NH</option>
+											<option value="NJ">NJ</option>
+											<option value="NM">NM</option>
+											<option value="NV">NV</option>
+											<option value="NY">NY</option>
+											<option value="ND">ND</option>
+											<option value="OH">OH</option>
+											<option value="OK">OK</option>
+											<option value="OR">OR</option>
+											<option value="PA">PA</option>
+											<option value="RI">RI</option>
+											<option value="SC">SC</option>
+											<option value="SD">SD</option>
+											<option value="TN">TN</option>
+											<option value="TX">TX</option>
+											<option value="UT">UT</option>
+											<option value="VT">VT</option>
+											<option value="VA">VA</option>
+											<option value="WA">WA</option>
+											<option value="WI">WI</option>
+											<option value="WV">WV</option>
+											<option value="WY">WY</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+									<div class="checkout-form-list">
+										<label>ZipCode <span class="required">*</span></label>
+										<input type="number" name="zipcode" placeholder="Zipcode" required>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+									<div class="checkout-form-list">
+										<label>Email Address <span class="required">*</span></label>
+										<input type="email" name="email" required>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+									<div class="checkout-form-list">
+										<label>Phone <span class="required">*</span></label>
+										<input type="tel" name="phone" placeholder="XXX-XXX-XXXX" required>
+									</div>
+								</div>
+								<div class="col-lg-12">
+									<div class="checkout-form-list create-acc">
+										<label><a href="{{url_for('register')}}">Create an account?</a></label>
+									</div>
+									<!-- Create Account option currently unavailable -->
+									<div class="checkout-form-list create-account" id="cbox_info" style="display: none;">
+										<p>Create an account by entering the information below. If you are a returning customer please login at the top of the page.</p>
+										<label>Account password  <span class="required">*</span>
+											<input type="password" placeholder="password">
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+						<div class="your-order">
+							<h3>Your order</h3>
+							<div class="your-order-table table-responsive">
+
+<!----------------------------------------------------------end checkout table --------------------------------------------------------------------------------------------------------------------------------------->
+							</div>
+
+                            <div class="payment-method">
+                                <div>
+                                    <input type="number" id="gift-code" name="gift-code" placeholder="Gift card code" min="0"><br>
+                                    <input type="number" id="gift-balance" name="gift-balance" placeholder="Amount" min="1" max="1000"><br><br>
+							    </div>
+								<div class="payment-accordion">
+									<div class="collapses-group">
+										<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+											<div class="panel panel-default">
+												<div class="panel-heading" role="tab" id="headingOne">
+													<h4 class="panel-title">
+														<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+															Credit Card
+														</a>
+													</h4>
+												</div>
+												<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+													<div class="panel-body">
+														<p>Please enter credit card data:</p>
+														<form id="form2" method="post" >
+															<input type="text" pattern="[0-9]{13,19}" style="height:30px;width:260px;" id="cardNumber" name="cardNumber" placeholder="Credit Card Number" required> <br>
+															<input type="text" pattern="[0-9]{3}" maxlength="3" style="height:30px;width:260px;" id="cvc" name="cvc" placeholder="Card Verification Code" required>
+														</form>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="order-button-payment">
+									<input id="place-order" type="submit"  value="Place order">
+
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- <button id="place-orde" type="submit" value="Place order"></button> -->
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- checkout-area-end -->
+	<!-- brand-area-start -->
+	<div class="brand-area ptb-50">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="brand-active">
+						<div class="single-brand">
+							<a href="#"><img src="{{url_for('static',filename='img/brand/1.png')}}" alt="brand" /></a>
+						</div>
+						<div class="single-brand">
+							<a href="#"><img src="{{url_for('static',filename='img/brand/2.png')}}" alt="brand" /></a>
+						</div>
+						<div class="single-brand">
+							<a href="#"><img src="{{url_for('static',filename='img/brand/3.png')}}" alt="brand" /></a>
+						</div>
+						<div class="single-brand">
+							<a href="#"><img src="{{url_for('static',filename='img/brand/4.png')}}" alt="brand" /></a>
+						</div>
+						<div class="single-brand">
+							<a href="#"><img src="{{url_for('static',filename='img/brand/5.png')}}" alt="brand" /></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- brand-area-end -->
+	<!-- newsletter-area-start -->
+	<div class="newsletter-area ptb-35">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+					<div class="newsletter-text">
+						<h3>Sign Up for Newsletters</h3>
+						<p>Be the First to Know. Sign up for newsletter today</p>
+					</div>
+				</div>
+				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+					<div class="newsletter-form">
+						<form >
+							<input type="email" placeholder="Enter your email address" />
+							<a href="#">Subscribe</a>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- newsletter-area-end -->
+	<!-- banner-area-2-start -->
+	<div class="banner-area-2">
+		<div class="container">
+			<div class="row">
+				<div class="border-b">
+					<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+						<div class="single-banner-2">
+							<div class="banner-2-img">
+								<a href="#"><i class="zmdi zmdi-remote-control-alt zmdi-hc-fw"></i></a>
+							</div>
+							<div class="banner-text-2">
+								<h2>888 345 6789</h2>
+								<p>Free support line!</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+						<div class="single-banner-2">
+							<div class="banner-2-img">
+								<a href="#"><i class="zmdi zmdi-email zmdi-hc-fw"></i></a>
+							</div>
+							<div class="banner-text-2">
+								<h2>Support@plazathemes.com</h2>
+								<p>Orders Support!</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+						<div class="single-banner-2">
+							<div class="banner-2-img">
+								<a href="#"><i class="zmdi zmdi-time zmdi-hc-fw"></i></a>
+							</div>
+							<div class="banner-text-2">
+								<h2>Mon - Fri / 8:00 - 18:00</h2>
+								<p>Working Days/Hours!</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- banner-area-2-end -->
+	<!-- footer-area-start -->
+
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            myfunction();
+        });
+
+        function myfunction() {
+        	let tr = '';
+            var total = 0;
+            let tableData = '';
+
+            if(JSON.parse(localStorage.getItem('items')) == null) {
+                tableData+='<table><thead><tr><th class="product-name">Product</th><th class="product-total">Total</th></tr></thead><tbody><tr class="cart_item"><td class="product-name"><strong class="product-quantity"></strong></td><td class="product-total"><span class="amount">$0.00</span></td></tr></tbody><tfoot><tr class="cart-subtotal><th>Cart Subtotal</th><td><span>$0.00</span></td></tr><tr id="order-total"><th>Order Total</th><td><strong>$<span class="amount">0.00</span></strong></td></tr></tfoot></table>';
+            } else {
+                JSON.parse(localStorage.getItem('items')).map(data => {
+                    var p = data.price.replace(/\$/g,'');
+                    let subtotal =  (Number(data.quantity)*Number(p)).toFixed(2);
+                    var sign = "$";
+                    subtotal.toString();
+                    total += (Number(data.quantity)*Number(p));
+
+                    tr += '<tr class="cart_item"><td class="productname"><input style="background:transparent; border:none; outline:none; width:500%;" name="product" value="'+data.product+'"><strong class="product-quantity"><input name="quantity" class="myitems" readonly="readonly" value="'+ data.quantity+'"></strong><p>x</p></td><td class="product-total"><span class="amount">$<input name="subtotal" style="background:transparent;border:none;outline:none;width:50%;" value="'+subtotal+'"></span> </td></tr>';
+                });
+                tableData ='<table><thead><tr><th class="product-name">Product</th><th class="product-total">Total</th></tr></thead><tbody>'+tr+'</tbody><tfoot><tr class="cart-subtotal><th>Cart Subtotal</th><td><span>$0.00</span></td></tr><tr id="order-total"><th>Order Total</th><td><strong><span class="amount">$<input name="total" style="background:transparent;border:none;outline:none;width:50%;" value="'+total.toFixed(2)+'"></span></strong></td></tr></tfoot></table>';
+            }
+
+            div= document.getElementsByClassName('your-order-table table-responsive');
+            div[0].innerHTML = tableData;
+        }
+
+        document.getElementById('place-order').onclick = function submitInfo() {
+            btn = document.getElementsByName('total').length
+            if(btn == 0){
+                alert('The cart is empty!');
+            }
+            else {
+                localStorage.removeItem('items'); //Note: This also clears when asking for more than the amount in stock.
+            }
+        };
+    </script>
+
+{%endblock%}

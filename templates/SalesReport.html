@@ -1,0 +1,121 @@
+{% extends "index.html" %}
+
+{% block content %}
+    <div class="breadcrumbs-area mb-80">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="breadcrumbs-menu">
+						<ul>
+							<li><a href="{{url_for('home')}}">Home<i class="fa fa-angle-right"></i></a></li>
+							<li><a href="#" class="active">Sales</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div>
+		<form action="#" onsubmit="return requestReport(this);" method="POST" style="margin: 70px 50px 75px;">
+			<label for="since">Report on all Sales since this date:</label><br>
+			<input type="date" id="since" name="since" required>
+			<br><br>
+
+			<button type="submit">Get Report</button>
+		</form>
+	</div>
+
+	<!-- report -->
+	<div id="report" class="cart-main-area pb-80">
+        <div class="container">
+            <div id="amount">
+                <h2><span></span> Results</h2>
+        	</div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="table-content table-responsive">
+                        <table id="reportTable" style="width:100%">
+                            <tr>
+                                <th>Logged On</th>
+                                <th>First Bought On</th>
+                                <th>Last Bought On</th>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Unit Price</th>
+                                <th>Current Quantity</th>
+                                <th>Quantity Bought</th>
+                                <th>Orders Involving Product</th>
+                                <th>Total Profit</th>
+                            </tr>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+	<script>
+
+	    window.addEventListener('DOMContentLoaded', (event) => {
+	        $("#report").hide();
+	        $("#amount").hide();
+	    });
+
+        function requestReport(theForm) {
+            event.preventDefault();
+            let request = {
+                from_date: theForm.since.value
+            };
+
+            console.log(JSON.stringify(request));
+
+            $.ajax({
+                type:"POST",
+                url:"{{url_for('sales')}}",
+                contentType: "application/json",
+                data: JSON.stringify(request),
+                dataType: 'json',
+            }).done(function(data) {
+                console.log('data successfully sent & returned');
+                console.log(JSON.stringify(data));
+
+                $("#amount").hide();
+                $("#amount span").text(data.amount);
+                $("#amount").show();
+
+                // clear/hide table
+                $("#report").hide();
+                $(".sales-info").remove();
+                // $("th span").text(`${request.from_date}`);
+                if(data.amount <= 0) {
+                    $("#reportTable").append(`<tr class="sales-info">
+                            <td colspan="10">No Results</td>
+                            </tr>`);
+                } else {
+                    for(let i=0; i < data.amount; i++) {
+                        let p = data.products[i];
+                        $("#reportTable").append(`<tr class="sales-info">
+                            <td class="logged_on">${p.logged_on}</td>
+                            <td class="first_bought_on">${p.first_bought_on}</td>
+                            <td class="last_bought_on">${p.last_bought_on}</td>
+                            <td class="name">${p.name}</td>
+                            <td class="type">${p.type}</td>
+                            <td class="unit_price">$${parseFloat(p.unit_price).toFixed(2)}</td>
+                            <td class="current_quantity">${p.current_quantity}</td>
+                            <td class="quantity_bought">${p.quantity_bought}</td>
+                            <td class="num_orders">${p.num_orders}</td>
+                            <td class="total_profit">$${parseFloat(p.total_profit).toFixed(2)}</td>
+                            </tr>`);
+                    }
+                }
+
+                // show table
+                $("#report").show();
+            });
+        }
+
+    </script>
+
+{% endblock %}
